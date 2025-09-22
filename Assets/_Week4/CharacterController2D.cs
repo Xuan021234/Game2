@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections;
 
 public class CharacterController2D : MonoBehaviour
 {
@@ -12,10 +13,20 @@ public class CharacterController2D : MonoBehaviour
 	[SerializeField] private Transform m_CeilingCheck;							// A position marking where to check for ceilings
 	[SerializeField] private Collider2D m_CrouchDisableCollider;				// A collider that will be disabled when crouching
 
+	bool doubleJump = false;
+	[HideInInspector]
+	public bool canDash = false;
+	[HideInInspector]
+	public bool isDashing = false;
+	public float dashCooldown = 0.5f;
+	public float dashingPower = 24f;
+	public float dashingTime =  0.1f;
+
+
 	const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
 	private bool m_Grounded;            // Whether or not the player is grounded.
 	const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
-	private Rigidbody2D m_Rigidbody2D;
+	public Rigidbody2D m_Rigidbody2D;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 	private Vector3 m_Velocity = Vector3.zero;
 
@@ -45,7 +56,6 @@ public class CharacterController2D : MonoBehaviour
 	{
 		bool wasGrounded = m_Grounded;
 		m_Grounded = false;
-
 		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
 		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
@@ -54,12 +64,29 @@ public class CharacterController2D : MonoBehaviour
 			if (colliders[i].gameObject != gameObject)
 			{
 				m_Grounded = true;
+				doubleJump = true;
 				if (!wasGrounded)
 					OnLandEvent.Invoke();
 			}
 		}
 	}
 
+	public IEnumerator Dash()
+	{
+		GetComponent<Health>().CanITakeDamage = false;
+		canDash = false;
+		isDashing = true;
+		float originalGravity = m_Rigidbody2D.gravityScale;
+		m_Rigidbody2D.gravityScale = 0;
+		m_Rigidbody2D.velocity = new(transform.localScale.x * dashingPower,0f);
+		yield return new WaitForSeconds(dashingTime);
+		m_Rigidbody2D.velocity = new(0f,0f);
+		m_Rigidbody2D.gravityScale = originalGravity;
+		isDashing = false;
+		GetComponent<Health>().CanITakeDamage = true;
+		yield return new WaitForSeconds(dashCooldown);
+		canDash = true;
+	}
 
 	public void Move(float move, bool crouch, bool jump)
 	{
@@ -130,8 +157,12 @@ public class CharacterController2D : MonoBehaviour
 			m_Grounded = true;
 			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
 		}
+		else if(!m_Grounded && doubleJump && jump)
+		{
+			doubleJump = false;
+			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce * 1.5f));
+		}
 	}
-
 
 	private void Flip()
 	{

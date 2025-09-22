@@ -5,7 +5,7 @@ using UnityEngine;
 public class Monster : MonoBehaviour
 {
     public int MovingRange = 3;
-    public SpriteRenderer sprite;
+    SpriteRenderer sprite;
     Vector3 originalPosition;
 
     private void Start()
