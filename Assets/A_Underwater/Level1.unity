@@ -2656,6 +2656,7 @@ GameObject:
   - component: {fileID: 1333232960}
   - component: {fileID: 1333232959}
   - component: {fileID: 1333232958}
+  - component: {fileID: 1333232969}
   m_Layer: 0
   m_Name: Player
   m_TagString: Coin
@@ -2788,6 +2789,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FullHP: 5
   CurrentHP: 5
+  CanITakeDamage: 1
   HPHearts:
   - {fileID: 1758862041}
   - {fileID: 946707436}
@@ -2795,7 +2797,8 @@ MonoBehaviour:
   - {fileID: 629090037}
   - {fileID: 2135287236}
   DamageColor: {r: 1, g: 0.0603773, b: 0.0603773, a: 0.5176471}
-  healSound: {fileID: 8300000, guid: 519107ee546b5a94290c9063c27cb8ec, type: 3}
+  heartSound: {fileID: 0}
+  gameOverMenu: {fileID: 0}
 --- !u!114 &1333232961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2838,10 +2841,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1333232957}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc38692daf948ae4bb26d7ebe8e2e0c2, type: 3}
+  m_Script: {fileID: 11500000, guid: f86f598ff3f734997bc3ba948e151278, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
+  controller: {fileID: 1333232969}
   animator: {fileID: 1333232962}
   runSpeed: 40
 --- !u!58 &1333232964
@@ -2950,6 +2953,46 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1333232969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1333232957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ff0cd6b884c9ea4f9d15bd1e972404e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_JumpForce: 700
+  m_CrouchSpeed: 0.477
+  m_MovementSmoothing: 0.05
+  m_AirControl: 1
+  m_WhatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  m_GroundCheck: {fileID: 1832092963}
+  m_CeilingCheck: {fileID: 514105627}
+  m_CrouchDisableCollider: {fileID: 0}
+  OnLandEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnCrouchEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1363884745
 GameObject:
   m_ObjectHideFlags: 0
@@ -3102,6 +3145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovingRange: 3
+  sprite: {fileID: 468538512}
 --- !u!1001 &1485755846
 PrefabInstance:
   m_ObjectHideFlags: 0

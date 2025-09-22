@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ChangeScene : MonoBehaviour
+
+public class ChangeScene1 : MonoBehaviour
 {
-    private void Start()
+    //Starts
+
+    private void Starts()
     {
         DontDestroyOnLoad(this);
     }
 
-    public void SceneChange(string SceneName)
+    //SceneChange
+    public void SceneChange1(string SceneName)
     {
         SceneManager.LoadScene(SceneName);
     }
