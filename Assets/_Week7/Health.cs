@@ -14,21 +14,29 @@ public class Health : MonoBehaviour
     public AudioClip heartSound;
     public GameObject gameOverMenu;
 
+    private Spawnpoint spawnpoint; // 1. Create a variable to hold the component
+
+    private void Awake() // Awake runs before Start
+    {
+        // 2. Find the component ONCE and store it in the variable
+        spawnpoint = GetComponent<Spawnpoint>();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Death"))
         {
             CurrentHP = 0;
         }
-        else if(collision.gameObject.CompareTag("Trap") && CanITakeDamage)
+        else if (collision.gameObject.CompareTag("Trap") && CanITakeDamage)
         {
             StartCoroutine(TakeDamage());
         }
-        else if(collision.gameObject.CompareTag("Monster") && CanITakeDamage)
+        else if (collision.gameObject.CompareTag("Monster") && CanITakeDamage)
         {
             StartCoroutine(TakeDamage());
         }
-        else if(collision.gameObject.CompareTag("Heal"))
+        else if (collision.gameObject.CompareTag("Heal"))
         {
             GetComponent<AudioSource>().clip = heartSound;
             GetComponent<AudioSource>().Play();
@@ -47,12 +55,21 @@ public class Health : MonoBehaviour
 
     private void Update()
     {
-        if(CurrentHP <= 0)
+        if (CurrentHP <= 0)
         {
-            this.gameObject.SetActive(false);
-            gameOverMenu.SetActive(true);
+            // 3. Use the stored variable. It's much faster!
+            // You can add a safety check just in case.
+            if (spawnpoint != null)
+            {
+                spawnpoint.Reborn();
+            }
+            else
+            {
+                Debug.LogError("Spawnpoint component is missing!");
+            }
         }
     }
+
     public void RefillHP()
     {
         CanITakeDamage = true;
